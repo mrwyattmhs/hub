@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mr. Wyatt's Arcade — math games, plotted</title>
+
+<!--
+  ┌────────────────────────────────────────────────────────────────┐
+  │  EDIT YOUR GAMES HERE                                           │
+  │                                                                │
+  │  Each game links two ways:                                     │
+  │    play → the live game (GitHub Pages)                          │
+  │    code → the repository                                        │
+  │                                                                │
+  │  The "play" links assume GitHub Pages is turned on for each    │
+  │  repo. To turn it on: open the repo → Settings → Pages →       │
+  │  Source: "Deploy from a branch" → Branch: main / (root).       │
+  │  The live URL is then  https://mrwyattmhs.github.io/<repo>/     │
+  │                                                                │
+  │  To add a game later, copy one <article class="card"> block    │
+  │  and change the accent, links, title, blurb, and thumbnail.    │
+  └────────────────────────────────────────────────────────────────┘
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --ink:        #0b1a22;   /* plotter screen background */
+    --ink-2:      #0f2530;   /* card panel */
+    --ink-3:      #123040;   /* raised elements */
+    --grid:       #163947;   /* faint graph lines */
+    --grid-soft:  #12303c;
+    --paper:      #e9f4f5;   /* primary text */
+    --muted:      #7ba3b2;   /* labels, captions */
+    --hair:       #21495a;   /* hairline borders */
+
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-mono:    "Space Mono", ui-monospace, monospace;
+    --font-body:    "Inter", system-ui, sans-serif;
+
+    --maxw: 1120px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:var(--paper);
+    background-color:var(--ink);
+    /* graph-paper grid over the plotter screen */
+    background-image:
+      linear-gradient(var(--grid-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-soft) 1px, transparent 1px),
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(120% 90% at 50% -10%, #12303d 0%, var(--ink) 60%);
+    background-size:
+      28px 28px, 28px 28px,
+      140px 140px, 140px 140px,
+      100% 100%;
+    background-position:center top;
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  a{ color:inherit; }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  header{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--hair);
+    position:relative;
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:0 0 20px;
+  }
+  .eyebrow .origin{
+    display:inline-flex;
+    width:22px; height:22px;
+    align-items:center; justify-content:center;
+    border:1px solid var(--hair);
+    border-radius:50%;
+    color:#5fd6c0;
+    flex:none;
+  }
+  .eyebrow .rule{
+    height:1px; flex:1 1 auto;
+    background:linear-gradient(90deg, var(--hair), transparent);
+    min-width:20px;
+  }
+
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.6rem, 7vw, 4.7rem);
+    line-height:0.98;
+    letter-spacing:-0.02em;
+    margin:0;
+  }
+  h1 .plot{ color:#5fd6c0; }
+
+  .lede{
+    max-width:52ch;
+    margin:22px 0 0;
+    color:var(--muted);
+    font-size:1.05rem;
+  }
+  .lede b{ color:var(--paper); font-weight:500; }
+
+  /* ── Grid of games ──────────────────────────────────── */
+  main{ padding:44px 0 24px; }
+
+  .board{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:22px;
+  }
+
+  .card{
+    --accent:#5fd6c0;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    background:
+      linear-gradient(180deg, var(--ink-2), var(--ink));
+    border:1px solid var(--hair);
+    border-radius:16px;
+    overflow:hidden;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .card:hover,
+  .card:focus-within{
+    transform:translateY(-4px);
+    border-color:color-mix(in srgb, var(--accent) 55%, var(--hair));
+    box-shadow:0 18px 40px -22px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  /* thumbnail = a real "plot" */
+  .thumb{
+    position:relative;
+    aspect-ratio:16/10;
+    background:
+      radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--accent) 12%, var(--ink-2)) 0%, var(--ink) 78%);
+    border-bottom:1px solid var(--hair);
+    color:var(--accent);
+  }
+  .thumb svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .tag{
+    position:absolute;
+    top:14px; left:14px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 14%, var(--ink));
+    border:1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    padding:4px 9px;
+    border-radius:999px;
+    z-index:2;
+  }
+
+  .body{
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex:1 1 auto;
+  }
+  .card h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.4rem;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .card p{
+    margin:0;
+    color:var(--muted);
+    font-size:0.95rem;
+    flex:1 1 auto;
+  }
+
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-top:14px;
+  }
+  .play{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:0.98rem;
+    text-decoration:none;
+    color:var(--ink);
+    background:var(--accent);
+    padding:10px 18px;
+    border-radius:10px;
+    transition:filter .2s ease, transform .2s ease;
+  }
+  .play:hover{ filter:brightness(1.08); }
+  .play:active{ transform:translateY(1px); }
+  .play svg{ width:15px; height:15px; }
+
+  .code{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    letter-spacing:0.02em;
+    text-decoration:none;
+    color:var(--muted);
+    border-bottom:1px solid transparent;
+    padding-bottom:1px;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .code:hover{ color:var(--paper); border-color:var(--hair); }
+  .code svg{ width:15px; height:15px; }
+
+  /* focus visibility */
+  a:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  footer{
+    margin-top:36px;
+    padding:28px 0 60px;
+    border-top:1px solid var(--hair);
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px 26px;
+    align-items:center;
+    justify-content:space-between;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.04em;
+  }
+  footer a{ text-decoration:none; color:var(--muted); border-bottom:1px solid var(--hair); }
+  footer a:hover{ color:var(--paper); }
+
+  /* ── Hover animation on the plots ───────────────────── */
+  .card:hover .blip,
+  .card:focus-within .blip{ animation:ping 1.4s ease-out infinite; }
+  @keyframes ping{
+    0%{ transform:scale(0.6); opacity:0.9; }
+    70%{ transform:scale(1.9); opacity:0; }
+    100%{ opacity:0; }
+  }
+  .card:hover .sweep,
+  .card:focus-within .sweep{ animation:sweep 3.2s linear infinite; }
+  @keyframes sweep{ to{ transform:rotate(360deg); } }
+
+  .card:hover .flag,
+  .card:focus-within .flag{ animation:wave 1.1s ease-in-out infinite; transform-origin:left center; }
+  @keyframes wave{ 0%,100%{ transform:skewX(0deg); } 50%{ transform:skewX(-9deg); } }
+
+  .card:hover .dial,
+  .card:focus-within .dial{ animation:turn 6s linear infinite; transform-origin:center; }
+  @keyframes turn{ to{ transform:rotate(-360deg); } }
+
+  .draw{ stroke-dasharray:200; stroke-dashoffset:200; }
+  .card:hover .draw,
+  .card:focus-within .draw{ animation:draw 1s ease forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* ── Responsive ─────────────────────────────────────── */
+  @media (max-width:720px){
+    .board{ grid-template-columns:1fr; }
+    header{ padding:44px 0 32px; }
+    main{ padding:32px 0 16px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
+    .draw{ stroke-dashoffset:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">
+      <span class="origin" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 0v12M0 6h12"/>
+        </svg>
+      </span>
+      Origin (0,0) · mrwyattmhs
+      <span class="rule" aria-hidden="true"></span>
+    </p>
+    <h1>Mr.&nbsp;Wyatt's&nbsp;Arcade<span class="plot">.</span></h1>
+    <p class="lede">Four small games for practicing math, each one <b>plotted, not drilled</b>. Pick a coordinate system and play.</p>
+  </header>
+
+  <main>
+    <div class="board">
+
+      <!-- ── POLAR BATTLESHIP ─────────────────────────── -->
+      <article class="card" style="--accent:#f2b134;">
+        <div class="thumb">
+          <span class="tag">(r, θ)</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="A polar radar grid with a target blip">
+            <g fill="none" stroke="currentColor" stroke-width="1" opacity="0.5">
+              <circle cx="200" cy="125" r="30"/>
+              <circle cx="200" cy="125" r="58"/>
+              <circle cx="200" cy="125" r="86"/>
+              <circle cx="200" cy="125" r="114"/>
+            </g>
+            <g stroke="currentColor" stroke-width="1" opacity="0.35">
+              <path d="M200 11v228 M86 125h228"/>
+              <path d="M119 44 281 206 M281 44 119 206"/>
+            </g>
+            <!-- radar sweep -->
+            <g class="sweep" style="transform-origin:200px 125px;">
+              <path d="M200 125 L314 125 A114 114 0 0 0 281 44 Z" fill="currentColor" opacity="0.14"/>
+              <line x1="200" y1="125" x2="314" y2="125" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+            </g>
+            <!-- your ship -->
+            <g transform="translate(143,171) rotate(-32)">
+              <rect x="-13" y="-4" width="26" height="8" rx="4" fill="currentColor" opacity="0.9"/>
+            </g>
+            <!-- enemy blip -->
+            <g>
+              <circle class="blip" cx="256" cy="86" r="7" fill="currentColor"/>
+              <circle cx="256" cy="86" r="3.4" fill="#0b1a22" stroke="currentColor" stroke-width="1.6"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Polar Battleship</h2>
+          <p>Place your fleet by angle and radius, then hunt the enemy across a polar grid. Classic Battleship, new coordinate system.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/polar-battleship/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/polar-battleship">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── SIMPLIFY RADICALS ────────────────────────── -->
+      <article class="card" style="--accent:#3dd5b0;">
+        <div class="thumb">
+          <span class="tag">√ n</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="The square root of 72 simplified to 6 root 2">
+            <!-- √72 : checkmark hugs the number, bar spans it -->
+            <path d="M96 150 L112 150 L130 192 L160 74 L250 74"
+                  stroke="currentColor" stroke-width="6" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="172" y="152" font-family="'Space Mono', monospace" font-size="44" fill="currentColor">72</text>
+            <text x="262" y="150" font-family="'Space Mono', monospace" font-size="38" fill="currentColor" opacity="0.55">=</text>
+            <text x="296" y="152" font-family="'Space Mono', monospace" font-size="44" fill="currentColor">6</text>
+            <!-- √2 -->
+            <g transform="translate(324,112)">
+              <path d="M0 38 L9 38 L17 54 L29 18 L62 18" stroke="currentColor" stroke-width="4"
+                    fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="32" y="50" font-family="'Space Mono', monospace" font-size="38" fill="currentColor">2</text>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Simplify Radicals</h2>
+          <p>Break each root down to its simplest form against the clock. Quick reps for spotting perfect-square factors.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/simplify-radicals/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/simplify-radicals">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── SYSTEMS GOLF ─────────────────────────────── -->
+      <article class="card" style="--accent:#a3e635;">
+        <div class="thumb">
+          <span class="tag">x, y, z</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="Three lines intersecting at a point marked with a golf flag">
+            <!-- axes -->
+            <g stroke="currentColor" stroke-width="1" opacity="0.3">
+              <path d="M40 210 H370 M60 30 V225"/>
+            </g>
+            <!-- three lines meeting near (232,120) -->
+            <g stroke="currentColor" fill="none" stroke-width="2.4" stroke-linecap="round" opacity="0.85">
+              <line x1="70"  y1="196" x2="330" y2="70"/>
+              <line x1="96"  y1="52"  x2="320" y2="176"/>
+              <line x1="150" y1="220" x2="300" y2="40"/>
+            </g>
+            <!-- the hole -->
+            <ellipse cx="232" cy="122" rx="15" ry="6" fill="#0b1a22" stroke="currentColor" stroke-width="1.4"/>
+            <!-- solution flag -->
+            <g transform="translate(232,122)">
+              <line x1="0" y1="0" x2="0" y2="-58" stroke="currentColor" stroke-width="2.6"/>
+              <path class="flag" d="M0 -58 L34 -49 L0 -38 Z" fill="currentColor"/>
+              <circle class="blip" cx="0" cy="0" r="6" fill="currentColor"/>
+              <circle cx="0" cy="0" r="3" fill="#0b1a22"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Systems Golf</h2>
+          <p>Solve three-variable systems in as few strokes as possible. Fewer steps to the solution, better your score.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/systems-golf/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/systems-golf">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── FACTOR VAULT ─────────────────────────────── -->
+      <article class="card" style="--accent:#a78bfa;">
+        <div class="thumb">
+          <span class="tag">ac ÷ b</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="A vault dial built from a split-the-middle diamond">
+            <!-- vault ring -->
+            <g class="dial" style="transform-origin:200px 125px;">
+              <circle cx="200" cy="125" r="96" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+              <circle cx="200" cy="125" r="106" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+              <g stroke="currentColor" stroke-width="2" opacity="0.55">
+                <line x1="200" y1="19" x2="200" y2="33"/>
+                <line x1="200" y1="217" x2="200" y2="231"/>
+                <line x1="94" y1="125" x2="108" y2="125"/>
+                <line x1="292" y1="125" x2="306" y2="125"/>
+                <line x1="125" y1="50" x2="135" y2="60"/>
+                <line x1="265" y1="200" x2="275" y2="210"/>
+                <line x1="275" y1="50" x2="265" y2="60"/>
+                <line x1="135" y1="200" x2="125" y2="210"/>
+              </g>
+            </g>
+            <!-- split-the-middle diamond -->
+            <g stroke="currentColor" fill="none" stroke-width="1.6" opacity="0.7">
+              <path d="M200 60 L262 125 L200 190 L138 125 Z"/>
+              <path d="M200 60 L200 190 M138 125 L262 125"/>
+            </g>
+            <text x="200" y="98"  text-anchor="middle" font-family="'Space Mono', monospace" font-size="20" fill="currentColor">24</text>
+            <text x="169" y="132" text-anchor="middle" font-family="'Space Mono', monospace" font-size="18" fill="currentColor">4</text>
+            <text x="231" y="132" text-anchor="middle" font-family="'Space Mono', monospace" font-size="18" fill="currentColor">6</text>
+            <text x="200" y="172" text-anchor="middle" font-family="'Space Mono', monospace" font-size="20" fill="currentColor">10</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Factor Vault</h2>
+          <p>Crack each quadratic by splitting the middle term. Find the two numbers that open the lock.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/factor-vault/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/factor-vault">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer>
+    <span>Plotted with care · 4 games online</span>
+    <span><a href="https://github.com/mrwyattmhs">github.com/mrwyattmhs</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
