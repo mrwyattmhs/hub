@@ -320,7 +320,7 @@
       <span class="rule" aria-hidden="true"></span>
     </p>
     <h1>Mr.&nbsp;Wyatt's&nbsp;Arcade<span class="plot">.</span></h1>
-    <p class="lede">Four small games for practicing math, each one <b>plotted, not drilled</b>. Pick a coordinate system and play.</p>
+    <p class="lede">Five small games for practicing math, each one <b>plotted, not drilled</b>. Pick a coordinate system and play.</p>
   </header>
 
   <main>
@@ -498,11 +498,61 @@
         </div>
       </article>
 
+      <!-- ── VERTEX COMMAND ───────────────────────────── -->
+      <article class="card" style="--accent:#ff7f6e;">
+        <div class="thumb">
+          <span class="tag">(h, k)</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="A tank firing a parabolic shot through a drone, with the vertex marked">
+            <!-- ground -->
+            <line x1="24" y1="205" x2="384" y2="205" stroke="currentColor" stroke-width="1.4" opacity="0.45"/>
+            <!-- axis of symmetry -->
+            <line x1="230" y1="60" x2="230" y2="205" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 5" opacity="0.4"/>
+            <!-- shell path -->
+            <path class="draw" pathLength="200" d="M80 200 Q230 -80 380 200"
+                  fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.9"/>
+            <!-- vertex -->
+            <g>
+              <circle class="blip" cx="230" cy="60" r="7" fill="currentColor"/>
+              <circle cx="230" cy="60" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M230 44v8 M230 68v8 M214 60h8 M238 60h8" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="230" cy="60" r="3" fill="#0b1a22" stroke="currentColor" stroke-width="1.4"/>
+            </g>
+            <!-- drone -->
+            <g transform="translate(305,95)" fill="currentColor">
+              <rect x="-9" y="-4" width="18" height="9" rx="3"/>
+              <path d="M-16 0h32 M-16 0v-6 M16 0v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              <rect x="-24" y="-9" width="16" height="3" rx="1.5" opacity="0.7"/>
+              <rect x="8" y="-9" width="16" height="3" rx="1.5" opacity="0.7"/>
+            </g>
+            <!-- tank -->
+            <g fill="currentColor">
+              <line x1="70" y1="186" x2="80" y2="168" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M62 186 A9 9 0 0 1 80 186 Z"/>
+              <path d="M50 194 L92 194 L87 186 L53 186 Z"/>
+              <rect x="46" y="194" width="50" height="11" rx="5.5" opacity="0.75"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Vertex Command</h2>
+          <p>Fire tank shells along parabolas. Drag the vertex, write vertex form to shoot down drones, then solve for a from hilltop firing spots.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/vertex-tanks/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/vertex-tanks">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
   </main>
 
   <footer>
-    <span>Plotted with care · 4 games online</span>
+    <span>Plotted with care · 5 games online</span>
     <span><a href="https://github.com/mrwyattmhs">github.com/mrwyattmhs</a></span>
   </footer>
 
