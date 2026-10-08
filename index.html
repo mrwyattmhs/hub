@@ -320,7 +320,7 @@
       <span class="rule" aria-hidden="true"></span>
     </p>
     <h1>Mr.&nbsp;Wyatt's&nbsp;Arcade<span class="plot">.</span></h1>
-    <p class="lede">Five small games for practicing math, each one <b>plotted, not drilled</b>. Pick a coordinate system and play.</p>
+    <p class="lede">Six small games for practicing math, each one <b>plotted, not drilled</b>. Pick a coordinate system and play.</p>
   </header>
 
   <main>
@@ -548,11 +548,62 @@
           </div>
         </div>
       </article>
+
+      <!-- ── POLYNOMIAL COASTER ───────────────────────── -->
+      <article class="card" style="--accent:#5aa9ff;">
+        <div class="thumb">
+          <span class="tag">x → ±∞</span>
+          <svg viewBox="0 0 400 250" role="img" aria-label="A quartic curve drawn as roller coaster track, crossing the x-axis at two zeros and bouncing at a third, with a cart in the first dip">
+            <!-- axes -->
+            <g stroke="currentColor" stroke-width="1" opacity="0.3">
+              <path d="M20 125 H384 M205 20 V230"/>
+            </g>
+            <!-- track: crossties + rail -->
+            <path d="M24 26 C56 70 80 105 100 125 C118 143 128 186 150 186 C168 186 183 125 205 125 C228 125 240 178 262 178 C284 178 296 148 312 125 C328 102 350 60 380 26"
+                  fill="none" stroke="currentColor" stroke-width="11" stroke-dasharray="2 8" opacity="0.3"/>
+            <path class="draw" pathLength="200"
+                  d="M24 26 C56 70 80 105 100 125 C118 143 128 186 150 186 C168 186 183 125 205 125 C228 125 240 178 262 178 C284 178 296 148 312 125 C328 102 350 60 380 26"
+                  fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- zeros: two crossings, one bounce -->
+            <g fill="#0b1a22" stroke="currentColor" stroke-width="1.8">
+              <circle cx="100" cy="125" r="5.5"/>
+              <circle cx="312" cy="125" r="5.5"/>
+            </g>
+            <g>
+              <circle class="blip" cx="205" cy="125" r="7" fill="currentColor"/>
+              <circle cx="205" cy="125" r="5.5" fill="currentColor"/>
+            </g>
+            <!-- cart in the first dip -->
+            <g transform="translate(150,186)" fill="currentColor">
+              <rect x="-15" y="-19" width="30" height="12" rx="4.5"/>
+              <circle cx="3" cy="-25" r="4.6"/>
+              <g fill="#0b1a22" stroke="currentColor" stroke-width="1.4">
+                <circle cx="-8.5" cy="-5" r="3.8"/>
+                <circle cx="8.5" cy="-5" r="3.8"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h2>Polynomial Coaster</h2>
+          <p>Build the track from the equation: set the end behavior, then pass through or bounce at each zero. Get it right and the cart rides; get it wrong and it flies off.</p>
+          <div class="actions">
+            <a class="play" href="https://mrwyattmhs.github.io/polynomial-coaster/">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </a>
+            <a class="code" href="https://github.com/mrwyattmhs/polynomial-coaster">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+              code
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
   </main>
 
   <footer>
-    <span>Plotted with care · 5 games online</span>
+    <span>Plotted with care · 6 games online</span>
     <span><a href="https://github.com/mrwyattmhs">github.com/mrwyattmhs</a></span>
   </footer>
 
